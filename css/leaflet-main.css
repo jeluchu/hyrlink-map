@@ -38,7 +38,7 @@
 }
 
 .leaflet-control-zoom {
-    border: 0px !important;
+    border: 0 !important;
     border-radius: 100px;
 }
 
@@ -77,4 +77,16 @@
     .leaflet-control-zoom {
         bottom: 60px !important;
     }
+}
+
+.leaflet-control-layers-expanded {
+    padding: 0;
+    overflow: hidden;
+}
+
+.leaflet-control-layers-toggle {
+    background-image: url('images/icons/map_Mesa de trabajo 1.svg') !important;
+    background-size: 26px 26px;
+    width: 36px;
+    height: 36px;
 }

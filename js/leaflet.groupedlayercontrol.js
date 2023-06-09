@@ -1,7 +1,5 @@
-/* global L */
-
 // A layer control which provides for layer groupings.
-// Author: Ishmael Smyrnow
+
 L.Control.GroupedLayers = L.Control.extend({
 
     options: {
