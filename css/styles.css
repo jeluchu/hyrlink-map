@@ -1,0 +1,64 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.map-container {
+    width: 100%;
+    height: 100vh;
+}
+
+#map-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.menu-container {
+    background-color: rgba(0, 0, 0, .8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.map-option {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.map-option i {
+    margin-right: 5px;
+}
+
+.map-icon {
+    width: 40px;
+    height: 40px;
+    fill: #FEFCE6;
+    opacity: 0.5;
+}
+
+.map-icon:hover {
+    fill: #FEFCE6;
+    opacity: 1;
+}
+
+.selected .map-icon {
+    fill: #FEFCE6;
+    opacity: 1;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+    background: #222 url(../images/background_map.jpg);
+}
