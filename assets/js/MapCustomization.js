@@ -1,3 +1,9 @@
+/**
+ *
+ * Map settings
+ *
+ */
+
 const tileSize = 256,
     factorx = 1 / (tileSize / 3),
     factory = 1 / (tileSize / 3),
@@ -21,30 +27,24 @@ const zeldaMap = L.map("map", {
     tileSize: 256,
     attributionControl: false,
     crs: L.CRS.Zelda,
-    contextmenu: false,
-    contextmenuWidth: 140,
-    maxBoundsViscosity: 1.0
+   // contextmenu: true,
+   // contextmenuWidth: 140,
+    maxBoundsViscosity: 1.0,
+    renderer: L.canvas()
 });
-
-L.control.zoom({
-    position: 'bottomright'
-}).addTo(zeldaMap);
 
 const southWest = zeldaMap.unproject([0, imageheight], 8),
     northEast = zeldaMap.unproject([imagewidth, 0], 8),
     bounds = L.latLngBounds(southWest, northEast)
 
-
-
-zeldaMap.addLayer(getFairyFountains("Sky"))
 zeldaMap.setView(L.latLng(-1432, 395), 5);
 
-/* -------------- Map styles options -------------- */
-
 /**
- * Change Style of Map
- * @type {string}
+ *
+ * Map Layers
+ *
  */
+
 const tile_url = 'https://raw.githubusercontent.com/jeluchu/hyrlink-map-assets/main/tiles/';
 const sky = L.tileLayer(tile_url + 'sky_complete/{z}/{x}/{y}.png', { maxNativeZoom: 8, bounds: bounds, name: 'Sky' }),
     surface = L.tileLayer(tile_url + 'ground/{z}/{x}/{y}.png', { maxNativeZoom: 8, bounds: bounds, name: 'Surface' }),
@@ -54,14 +54,16 @@ const sky = L.tileLayer(tile_url + 'sky_complete/{z}/{x}/{y}.png', { maxNativeZo
         "Surface": surface,
         "Depths": depths,
     };
+sky.addTo(zeldaMap);
 
-const mapOptions = document.getElementsByClassName('map-option');
-for (let i = 0; i < mapOptions.length; i++) {
-    mapOptions[i].addEventListener('click', function() {
-        const style = this.getAttribute('data-style');
-        setMapStyle(style);
-    });
-}
+let previousBaseLayer;
+let currentBaseLayer= 'Sky';
+let control;
+zeldaMap.on('baselayerchange', (e) => {
+    previousBaseLayer = currentBaseLayer;
+    currentBaseLayer = e.name;
+    updateLayers();
+})
 
 function setMapStyle(style) {
     for (let key in baseLayers) {
@@ -70,22 +72,50 @@ function setMapStyle(style) {
     baseLayers[style].addTo(zeldaMap);
 }
 
-/* -------------- End map styles options -------------- */
-sky.addTo(zeldaMap);
+/**
+ *
+ * Map Zoom
+ *
+ */
 
-zeldaMap.on('baselayerchange', (e) => {
-    previousBaseLayer = currentBaseLayer;
-    currentBaseLayer = e.name;
-    updateLayers();
-})
+L.control.zoom({
+    position: 'bottomright'
+}).addTo(zeldaMap);
 
-var currentBaseLayer = 'Sky';
-var previousBaseLayer;
+/**
+ *
+ * Set Map Markers
+ *
+ */
+
+for (var i = 0; i < allMarkers.length; i++) {
+    const categoryMarkers = allMarkers[i];
+
+    L.geoJSON(categoryMarkers, {
+        pointToLayer: pointToLayer,
+        onEachFeature: onEachFeature
+    }).addTo(zeldaMap);
+
+    const menu_options = {
+        groupCheckboxes: false,
+        collapsed: false,
+        groupsCollapsable: true,
+        groupsExpandedClass: 'bi bi-caret-down-square-fill',
+        groupsCollapsedClass: 'bi bi-caret-right-square-fill',
+    };
+
+    control = L.control.groupedLayers(baseLayers, groupedOverlays['Sky']).addTo(zeldaMap);
+}
+
+/**
+ *
+ * Functions
+ *
+ */
 function updateLayers() {
     let category
     let subcat
     let marker
-
 
     if (previousBaseLayer) {
         for (category in groupedOverlays[previousBaseLayer]) {
@@ -97,7 +127,6 @@ function updateLayers() {
             }
         }
     }
-    getFairyFountains("Surface")
 
     for (category in groupedOverlays[currentBaseLayer]) {
         for (subcat in groupedOverlays[currentBaseLayer][category]) {
@@ -109,8 +138,50 @@ function updateLayers() {
     }
 }
 
-/*  Set default selector map */
+function addToOverlays(map, category, subcat) {
+    if (!(map in groupedOverlays)) {
+        groupedOverlays[map] = {};
+    }
+    if (!(category in groupedOverlays[map])) {
+        groupedOverlays[map][category] = {};
+    }
+    if (!(subcat in groupedOverlays[map][category])) {
+        groupedOverlays[map][category][subcat] = new L.LayerGroup();
+    }
+}
 
+function pointToLayer(feature, latlng) {
+    addToOverlays(feature.properties.map, feature.properties.category, feature.properties.subcat);
+
+    const markerOptions = {
+        icon: feature.properties.icon,
+        color: feature.properties.color
+    };
+    return L.canvasMarker(latlng, markerOptions);
+}
+
+function onEachFeature(feature, layer) {
+    feature.layer = layer;
+
+    if (feature.properties.title && feature.properties.category !== 'Labels') {
+        layer.bindPopup(
+            '<div>'
+            +feature.properties.title
+            +'<br />'+feature.properties.description
+            +'<br />'+feature.properties.position
+            +'<br /><span class="status">'+feature.properties.completed+'</span>'
+            +'</div>'
+        )
+    }
+
+    layer.addTo(groupedOverlays[feature.properties.map][feature.properties.category][feature.properties.subcat]);
+}
+
+/**
+ *
+ * Map Selection
+ *
+ */
 const mapMenuOptions = document.querySelectorAll('.map-option');
 mapMenuOptions.forEach((option) => {
     option.addEventListener('click', () => {
@@ -119,11 +190,24 @@ mapMenuOptions.forEach((option) => {
     });
 });
 
+const mapOptions = document.getElementsByClassName('map-option');
+for (let i = 0; i < mapOptions.length; i++) {
+    mapOptions[i].addEventListener('click', function() {
+        const style = this.getAttribute('data-style');
+        setMapStyle(style);
+    });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     const defaultOption = document.querySelector('.map-option.selected');
     defaultOption.classList.add('selected');
 });
 
+/**
+ *
+ * Map Menu Options
+ *
+ */
 let navigation = document.querySelector('.navigation');
 navigation.onclick = function () {
     navigation.classList.toggle('active')

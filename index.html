@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa Personalizado</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/leaflet-main.css">
-    <link rel="stylesheet" href="leaflet/leaflet.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Hyrlink Map es un mapa interactivo para encontrar elementos ocultos del juego, puntos de interés, atalayas, elementos Zonnan..." />
+    <meta name="keywords" content="zelda, zelda map, totk map, Tears of the Kingdom map, hyrule map, totk guide, speedrun" />
+    <meta name="robots" content="index, follow">
 
-    <script src="./js/markers/fairies.js"></script>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@jeluchu">
+    <meta name="twitter:title" content="Hyrlink Map: Mapa interactivo de Tears of The Kingdom">
+    <meta name="twitter:description" content="Hyrlink Map es un mapa interactivo para encontrar elementos ocultos del juego, puntos de interés, atalayas, elementos Zonnan...">
+    <meta name="twitter:image" content="https://hyrlink.macarteycreacion.com/map/assets/img/twitter-cover.png">
+
+    <title>Hyrlink Map</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/leaflet-main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.9/leaflet-search.min.css" />
+
+    <script src="assets/js/markers/AllMarkers.js"></script>
 </head>
 
 <body>
@@ -23,7 +35,7 @@
 
     <header style="height: 78px;">
         <div class="menut-icon">
-            <img class="logo" src="images/hyrlink-logo.png" alt="">
+            <img class="logo" src="assets/img/hyrlink-logo.png" alt="">
             <span class="icon-text">Texto del icono</span>
         </div>
         <div id="image-overlay" translate="no">
@@ -236,9 +248,13 @@
     </button>
 </div>
 
-
-<script src="leaflet/leaflet.js"></script>
-<script src="js/main.js"></script>
-<script type="text/javascript" src="js/leaflet.groupedlayercontrol.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet-src.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.9/leaflet-search.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script type="text/javascript" src="assets/js/Leaflet.CanvasMarker.js"></script>
+<script type="text/javascript" src="assets/js/leaflet.groupedlayercontrol.js"></script>
+<script type="text/javascript" src="assets/js/MapCustomization.js"></script>
 </body>
 </html>
