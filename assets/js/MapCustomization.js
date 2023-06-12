@@ -27,8 +27,6 @@ const zeldaMap = L.map("map", {
     tileSize: 256,
     attributionControl: false,
     crs: L.CRS.Zelda,
-   // contextmenu: true,
-   // contextmenuWidth: 140,
     maxBoundsViscosity: 1.0,
     renderer: L.canvas()
 });
@@ -157,7 +155,41 @@ function pointToLayer(feature, latlng) {
         icon: feature.properties.icon,
         color: feature.properties.color
     };
-    return L.canvasMarker(latlng, markerOptions);
+
+    /*var customIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div class="custom-marker-content">A</div>'
+    });*/
+
+    // TODO: REVIEW
+    let customIcon;
+    customIcon = L.divIcon({
+        className: 'map-icon-svg',
+        html: "<div class='circle circleMap-medium ' style='background-color: " + feature.properties.color + "; "
+            + "border-color: " + feature.properties.color + "'>"
+            + "<span class='icon-" + feature.properties.subcat + " icnText-medium'></span>"
+            + "</div>"
+    });
+    /*if (zeldaMap.getZoom() > 4) {
+        customIcon = L.divIcon({
+            className: 'map-icon-svg',
+            html: "<div class='circle circleMap-small' style='background-color: " + feature.properties.color + "; "
+                + "border-color: " + feature.properties.color + "'>"
+                + "<span class='icon-" + "fairy" + " icnText-small'></span>"
+                + "</div>"
+        });
+    } else {
+        customIcon = L.divIcon({
+            className: 'map-icon-svg',
+            html: "<div class='circle circleMap-medium ' style='background-color: " + feature.properties.color + "; "
+                + "border-color: " + feature.properties.color + "'>"
+                + "<span class='icon-" + "fairy" + " icnText-medium'></span>"
+                + "</div>"
+        });
+    }*/
+
+
+    return L.marker(latlng, { icon: customIcon });
 }
 
 function onEachFeature(feature, layer) {
@@ -169,7 +201,6 @@ function onEachFeature(feature, layer) {
             +feature.properties.title
             +'<br />'+feature.properties.description
             +'<br />'+feature.properties.position
-            +'<br /><span class="status">'+feature.properties.completed+'</span>'
             +'</div>'
         )
     }
@@ -211,4 +242,20 @@ window.addEventListener('DOMContentLoaded', () => {
 let navigation = document.querySelector('.navigation');
 navigation.onclick = function () {
     navigation.classList.toggle('active')
+}
+
+function markerIconMedium() {
+    return L.DivIcon.extend({
+        options: {
+            iconSize: [
+                24,
+                24
+            ]
+            , iconAnchor: [
+                Math.floor(24   / 2),
+                Math.floor(24 / 2)
+            ]
+            , popupAnchor: [0,0]
+        }
+    });
 }

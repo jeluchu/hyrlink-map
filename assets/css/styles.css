@@ -322,3 +322,120 @@ a {
     border: none;
     border-top: 1px solid rgba(254, 252, 230, 0.2);
 }
+
+.custom-marker {
+    background-color: #ff0000; /* Color de fondo del marcador */
+    width: 30px; /* Ancho del marcador */
+    height: 30px; /* Altura del marcador */
+    border-radius: 50%; /* Radio de las esquinas para crear un círculo */
+    transform: translate(-50%, -50%); /* Centrar el marcador en su posición */
+}
+
+/* Estilos para el contenido del marcador */
+.custom-marker-content {
+    color: #ffffff; /* Color del texto o icono del marcador */
+    font-size: 16px; /* Tamaño de fuente del contenido */
+    text-align: center; /* Alinear el contenido en el centro del marcador */
+    line-height: 30px; /* Alinear verticalmente el contenido en el centro del marcador */
+}
+
+.circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    line-height: 64px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+}
+
+.circleMap {
+    width: 25px !important;
+    height: 25px !important;
+    line-height: 22px !important;
+}
+
+.icnText {
+    vertical-align: middle;
+    font-size: 16px;
+}
+
+.circleMap-medium {
+    width: 25px !important;
+    height: 25px !important;
+    line-height: 25px !important;
+    box-shadow: rgba(0,0,0,.25) 0 2px 6px !important;
+}
+
+.icnText-medium {
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.circleMap-small {
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 14px !important;
+    box-shadow: rgba(0,0,0,.25) 0 2px 6px !important;
+}
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.ttf?gu1tnm') format('truetype'),
+    url('../fonts/icomoon.woff?gu1tnm') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fairy:before {
+    content: "\e900";
+}
+
+.icon-treasure:before {
+    content: "\e901";
+}
+
+.icon-stone:before {
+    content: "\e902";
+}
+
+.icon-lightroot:before {
+    content: "\e903";
+}
+
+.icon-korok:before {
+    content: "\e904";
+}
+
+.icon-cave:before {
+    content: "\e905";
+}
+
+.icon-chasm:before {
+    content: "\e906";
+}
+
+.icon-stable:before {
+    content: "\e907";
+}
+
+.icon-devicedispenser:before {
+    content: "\e908";
+}
