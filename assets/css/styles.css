@@ -439,3 +439,15 @@ a {
 .icon-devicedispenser:before {
     content: "\e908";
 }
+
+.icon-shrine:before {
+    content: "\e909";
+}
+
+.icon-village:before {
+    content: "\e90a";
+}
+
+.icon-dragontears:before {
+    content: "\e90b";
+}

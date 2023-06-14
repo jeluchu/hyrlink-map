@@ -102,7 +102,7 @@ for (var i = 0; i < allMarkers.length; i++) {
         groupsCollapsedClass: 'bi bi-caret-right-square-fill',
     };
 
-    control = L.control.groupedLayers(baseLayers, groupedOverlays['Sky']).addTo(zeldaMap);
+    //control = L.control.groupedLayers(baseLayers, groupedOverlays['Surface']).addTo(zeldaMap);
 }
 
 /**
@@ -239,23 +239,69 @@ window.addEventListener('DOMContentLoaded', () => {
  * Map Menu Options
  *
  */
-let navigation = document.querySelector('.navigation');
+/*let navigation = document.querySelector('.navigation');
 navigation.onclick = function () {
     navigation.classList.toggle('active')
+}*/
+
+$(".category-item").click(function() {
+    let itemInfo = this.id.split(".")
+    let category = itemInfo[0]
+    let id = itemInfo[1]
+ console.log(this.id)
+
+    //L.control.groupedLayers(baseLayers, groupedOverlays[currentBaseLayer][category][id]._layers).addTo(zeldaMap);
+    removeLayers()
+});
+
+function removeLayers() {
+    let category
+    let subcat
+    let marker
+
+    if (currentBaseLayer) {
+        for (category in groupedOverlays[currentBaseLayer]) {
+            for (subcat in groupedOverlays[currentBaseLayer][category]) {
+                for (marker in groupedOverlays[currentBaseLayer][category][subcat]._layers) {
+                    groupedOverlays[currentBaseLayer][category][subcat]._layers[marker].remove();
+                }
+                removeLayer(groupedOverlays[currentBaseLayer][category][subcat]);
+            }
+        }
+    }
+
+
 }
 
-function markerIconMedium() {
-    return L.DivIcon.extend({
-        options: {
-            iconSize: [
-                24,
-                24
-            ]
-            , iconAnchor: [
-                Math.floor(24   / 2),
-                Math.floor(24 / 2)
-            ]
-            , popupAnchor: [0,0]
+function removeLayer(layer) {
+    var id = L.Util.stamp(layer);
+    var _layer = _getLayer(id, layer);
+    if (_layer) {
+        layer._layers.splice(layer._layers.indexOf(_layer), 1);
+    }
+    if (!layer._container) {
+        return;
+    }
+    return this;
+}
+
+function _getLayer(id, layer) {
+    layer._layers.forEach((lay) => {
+        if (lay && L.stamp(lay.layer) === id) {
+            return lay;
         }
     });
 }
+
+/*
+
+    for (category in groupedOverlays[currentBaseLayer]) {
+        for (subcat in groupedOverlays[currentBaseLayer][category]) {
+            for (marker in groupedOverlays[currentBaseLayer][category][subcat]._layers) {
+                groupedOverlays[currentBaseLayer][category][subcat]._layers[marker].addTo(groupedOverlays[currentBaseLayer][category][subcat]);
+            }
+            control.addOverlay(groupedOverlays[currentBaseLayer][category][subcat], subcat, category)
+        }
+    }
+
+ */

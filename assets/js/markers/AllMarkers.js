@@ -4,5 +4,9 @@ const allMarkers = [
     Caves,
     Chasms,
     Stables,
-    deviceDispenser
+    deviceDispenser,
+    Lightroots,
+    Shrines,
+    Villages,
+    DragonTears
 ];

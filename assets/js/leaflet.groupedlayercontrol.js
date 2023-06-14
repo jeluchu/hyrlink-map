@@ -282,7 +282,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
     input.layerId = L.Util.stamp(obj.layer);
     input.groupID = obj.group.id;
-    L.DomEvent.on(input, 'click', this._onInputClick, this);
+    L.DomEvent.on(input, 'click', this._onInputClick, this); // TODO: Aquí se llama
 
     var name = document.createElement('span');
     name.innerHTML = ' ' + obj.name;
@@ -387,6 +387,7 @@ L.Control.GroupedLayers = L.Control.extend({
     this_legend._handlingClick = false;
   },
 
+  // TODO: Muestra/Ocula los marcadores
   _onInputClick: function () {
     var obj,
     inputs = this._form.getElementsByClassName('leaflet-control-layers-selector'),
