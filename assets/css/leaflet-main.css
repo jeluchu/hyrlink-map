@@ -84,13 +84,6 @@
     overflow: hidden;
 }
 
-/*.leaflet-control-layers-toggle {
-    background-image: url('images/icons/map_Mesa de trabajo 1.svg') !important;
-    background-size: 26px 26px;
-    width: 36px;
-    height: 36px;
-}*/
-
 .leaflet-marker-icon,
 .leaflet-marker-shadow {
     -webkit-animation: fadein 0.3s;

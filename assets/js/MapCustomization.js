@@ -1,8 +1,4 @@
-/**
- *
- * Map settings
- *
- */
+window.filters = {}
 
 const tileSize = 256,
     factorx = 1 / (tileSize / 3),
@@ -55,7 +51,7 @@ const sky = L.tileLayer(tile_url + 'sky_complete/{z}/{x}/{y}.png', { maxNativeZo
 sky.addTo(zeldaMap);
 
 let previousBaseLayer;
-let currentBaseLayer= 'Sky';
+let currentBaseLayer = 'Sky';
 let control;
 zeldaMap.on('baselayerchange', (e) => {
     previousBaseLayer = currentBaseLayer;
@@ -80,30 +76,8 @@ L.control.zoom({
     position: 'bottomright'
 }).addTo(zeldaMap);
 
-/**
- *
- * Set Map Markers
- *
- */
+printMarkersByFilter("Sky")
 
-for (var i = 0; i < allMarkers.length; i++) {
-    const categoryMarkers = allMarkers[i];
-
-    L.geoJSON(categoryMarkers, {
-        pointToLayer: pointToLayer,
-        onEachFeature: onEachFeature
-    }).addTo(zeldaMap);
-
-    const menu_options = {
-        groupCheckboxes: false,
-        collapsed: false,
-        groupsCollapsable: true,
-        groupsExpandedClass: 'bi bi-caret-down-square-fill',
-        groupsCollapsedClass: 'bi bi-caret-right-square-fill',
-    };
-
-    //control = L.control.groupedLayers(baseLayers, groupedOverlays['Surface']).addTo(zeldaMap);
-}
 
 /**
  *
@@ -156,12 +130,6 @@ function pointToLayer(feature, latlng) {
         color: feature.properties.color
     };
 
-    /*var customIcon = L.divIcon({
-        className: 'custom-marker',
-        html: '<div class="custom-marker-content">A</div>'
-    });*/
-
-    // TODO: REVIEW
     let customIcon;
     customIcon = L.divIcon({
         className: 'map-icon-svg',
@@ -170,24 +138,6 @@ function pointToLayer(feature, latlng) {
             + "<span class='icon-" + feature.properties.subcat + " icnText-medium'></span>"
             + "</div>"
     });
-    /*if (zeldaMap.getZoom() > 4) {
-        customIcon = L.divIcon({
-            className: 'map-icon-svg',
-            html: "<div class='circle circleMap-small' style='background-color: " + feature.properties.color + "; "
-                + "border-color: " + feature.properties.color + "'>"
-                + "<span class='icon-" + "fairy" + " icnText-small'></span>"
-                + "</div>"
-        });
-    } else {
-        customIcon = L.divIcon({
-            className: 'map-icon-svg',
-            html: "<div class='circle circleMap-medium ' style='background-color: " + feature.properties.color + "; "
-                + "border-color: " + feature.properties.color + "'>"
-                + "<span class='icon-" + "fairy" + " icnText-medium'></span>"
-                + "</div>"
-        });
-    }*/
-
 
     return L.marker(latlng, { icon: customIcon });
 }
@@ -198,21 +148,16 @@ function onEachFeature(feature, layer) {
     if (feature.properties.title && feature.properties.category !== 'Labels') {
         layer.bindPopup(
             '<div>'
-            +feature.properties.title
-            +'<br />'+feature.properties.description
-            +'<br />'+feature.properties.position
-            +'</div>'
+            + feature.properties.title
+            + '<br />' + feature.properties.description
+            + '<br />' + feature.properties.position
+            + '</div>'
         )
     }
 
     layer.addTo(groupedOverlays[feature.properties.map][feature.properties.category][feature.properties.subcat]);
 }
 
-/**
- *
- * Map Selection
- *
- */
 const mapMenuOptions = document.querySelectorAll('.map-option');
 mapMenuOptions.forEach((option) => {
     option.addEventListener('click', () => {
@@ -223,8 +168,8 @@ mapMenuOptions.forEach((option) => {
 
 const mapOptions = document.getElementsByClassName('map-option');
 for (let i = 0; i < mapOptions.length; i++) {
-    mapOptions[i].addEventListener('click', function() {
-        const style = this.getAttribute('data-style');
+    mapOptions[i].addEventListener('click', function () {
+        const style = this.getAttribute('data-map');
         setMapStyle(style);
     });
 }
@@ -239,22 +184,118 @@ window.addEventListener('DOMContentLoaded', () => {
  * Map Menu Options
  *
  */
-/*let navigation = document.querySelector('.navigation');
+let navigation = document.querySelector('.navigation');
 navigation.onclick = function () {
     navigation.classList.toggle('active')
-}*/
+}
 
-$(".category-item").click(function() {
-    let itemInfo = this.id.split(".")
-    let category = itemInfo[0]
-    let id = itemInfo[1]
- console.log(this.id)
-
-    //L.control.groupedLayers(baseLayers, groupedOverlays[currentBaseLayer][category][id]._layers).addTo(zeldaMap);
-    removeLayers()
+$(".category-item").click(function () {
+    let subcategory = this.dataset.subcategory
+    printMarkersByType(subcategory) // TODO for filters
 });
 
+$(".map-option").click(function () {
+    let map = this.dataset.map
+    printMarkersByFilter(map)
+});
+
+function printMarkersByFilter(map) {
+   
+    window.filters.map = window.filters.map === map ? "" : map
+
+    if (!window.filters.map) {
+        removeLayers()
+        printMarkers(allMarkers)
+        return
+    }
+
+    const filteredMarkers = []
+
+    allMarkers.forEach((m) => {
+        const filteredSubMarkers = []
+
+        m.forEach((marker) => {
+            if (marker.properties.map === map) {
+                filteredSubMarkers.push(marker)
+            }
+        })
+        filteredMarkers.push(filteredSubMarkers)
+    })
+
+    removeLayers()
+    printMarkers(filteredMarkers)
+}
+
+function printMarkersByType(subcategory) {
+   
+    window.filters.subcat = window.filters.subcat === subcategory ? "" : subcategory
+   
+    if (!window.filters.subcat) {
+        removeLayers()
+        printResetMarkers(window.filters.map)
+        return
+    }
+
+    const filteredMarkers = []
+
+    allMarkers.forEach((m) => {
+        const filteredSubMarkers = []
+
+        m.forEach((marker) => {
+            if (marker.properties.map === window.filters.map && marker.properties.subcat === subcategory) {
+                filteredSubMarkers.push(marker)
+            }
+        })
+        filteredMarkers.push(filteredSubMarkers)
+    })
+
+    removeLayers()
+    printMarkers(filteredMarkers)
+}
+
+function printResetMarkers(map) {
+   
+    const filteredMarkers = []
+
+    allMarkers.forEach((m) => {
+        const filteredSubMarkers = []
+
+        m.forEach((marker) => {
+            if (marker.properties.map === map) {
+                filteredSubMarkers.push(marker)
+            }
+        })
+        filteredMarkers.push(filteredSubMarkers)
+    })
+
+    removeLayers()
+    printMarkers(filteredMarkers)
+    window.anyFilter = false
+}
+
+
+function printMarkers(filteredMarkers) {
+    window.markersToDelete = []
+    for (var i = 0; i < filteredMarkers.length; i++) {
+        const categoryMarkers = filteredMarkers[i];
+
+        const _markers = L.geoJSON(categoryMarkers, {
+            pointToLayer: pointToLayer,
+            onEachFeature: onEachFeature
+        })
+
+        _markers.addTo(zeldaMap);
+        window.markersToDelete.push(_markers);
+    }
+}
+
 function removeLayers() {
+    zeldaMap.eachLayer(function (layer) {
+        if (!layer._url) {
+            zeldaMap.removeLayer(layer);
+        }
+    });
+
     let category
     let subcat
     let marker
@@ -269,8 +310,6 @@ function removeLayers() {
             }
         }
     }
-
-
 }
 
 function removeLayer(layer) {
@@ -286,22 +325,9 @@ function removeLayer(layer) {
 }
 
 function _getLayer(id, layer) {
-    layer._layers.forEach((lay) => {
+    Array.from(layer._layers).forEach((lay) => {
         if (lay && L.stamp(lay.layer) === id) {
             return lay;
         }
     });
 }
-
-/*
-
-    for (category in groupedOverlays[currentBaseLayer]) {
-        for (subcat in groupedOverlays[currentBaseLayer][category]) {
-            for (marker in groupedOverlays[currentBaseLayer][category][subcat]._layers) {
-                groupedOverlays[currentBaseLayer][category][subcat]._layers[marker].addTo(groupedOverlays[currentBaseLayer][category][subcat]);
-            }
-            control.addOverlay(groupedOverlays[currentBaseLayer][category][subcat], subcat, category)
-        }
-    }
-
- */
